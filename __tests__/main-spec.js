@@ -5,8 +5,8 @@ it ('should add two numbers', () => {
 });*/
 
 
+const caller = require('../main');
 
-ifItemExist = require('../main');
 
 var shopList1 = ['0000', '0003', '0005', '0003'];
 var itemList1 = [
@@ -23,11 +23,11 @@ var itemList1 = [
 ];
 
 it ('should return false when call ifItemExist given shopList1 and itemList1', () => {
-    expect(ifItemExist(shopList1, itemList1)).toBe(false);
+    expect(caller.ifItemExist(shopList1, itemList1)).toBe(false);
 });
 
 
-var shopList2 = ['0000', '0003', '0005', '0003'];
+var shopList2 = ['0001', '0003', '0005', '0003'];
 var itemList2 = [
     {"id": "0001", "name" : "Coca Cola", "price": 3},
     {"id": "0002", "name" : "Diet Coke", "price": 4},
@@ -42,5 +42,30 @@ var itemList2 = [
 ];
 
 it ('should return true when call ifItemExist given shopList2 and itemList2', () => {
-    expect(ifItemExist(shopList2, itemList2)).toBe(true);
+    expect(caller.ifItemExist(shopList2, itemList2)).toBe(true);
+});
+
+var shopCount = [{key:"0001",count:1},{key:"0003",count:2},{key:"0005",count:1}];
+it ('should return receipt when call getReceipt given shopCount and itemList2', () => {
+    expect(caller.getReceipt(shopCount,itemList2)).toBe("Receipts \
+    ---------------------------------------------------------------------------- \
+    Coca Cola				3	1 \
+    Pepsi-Cola				5	2 \
+    Dr Pepper				7	1 \
+    ---------------------------------------------------------------------------- \
+    Price: 20");
+});
+
+it ('should return receipt when call printReceipt given shopList2 and itemList2', () => {
+    expect(caller.printReceipt(shopList2,itemList2)).toBe("Receipts \
+    ---------------------------------------------------------------------------- \
+    Coca Cola				3	1 \
+    Pepsi-Cola				5	2 \
+    Dr Pepper				7	1 \
+    ---------------------------------------------------------------------------- \
+    Price: 20");
+});
+
+it ('should return receipt when call printReceipt given shopList2 and itemList2', () => {
+    expect(caller.printReceipt(shopList1,itemList1)).toBe("[ERROR]:item not exist");
 });
