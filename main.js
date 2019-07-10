@@ -4,16 +4,31 @@
 
 module.exports = add;8*/
 
-function ifItemExist(shopCount,itemIdList){
+/*function ifItemExist(shopCount,itemIdList){
 	for(let i = 0; i < shopCount.length; i++){
 		if(itemIdList.indexOf(shopCount[i].key) == -1)
 			return false;
 	}
 	return true;
+}*/
+
+const ifItemExist = (shopCount,itemIdList) => {
+	let result = true;
+	for(let i = 0; i < shopCount.length; i++){
+		if(itemIdList.indexOf(shopCount[i].key) == -1){
+			result = false;
+			break;
+		}
+	}
+	//console.log(shopCount);
+	//console.log(itemIdList);
+	//console.log(result);
+	return result;
 }
 
 
-function getReceipt(shopCount,itemList){
+
+/*function getReceipt(shopCount,itemList){
 	let sum = 0;
 	let message = "Receipts"+"\n"+"----------------------------------------------------------------------------"+"\n";
 	for(let i = 0; i < shopCount.length; i++){
@@ -28,9 +43,28 @@ function getReceipt(shopCount,itemList){
 	message += "----------------------------------------------------------------------------"+"\n";
 	message += "Price: "+ sum;
 	return message;
+}*/
+
+const getReceipt = (shopCount,itemList) => {
+	let sum = 0;
+	let message = "Receipts"+"\n"+"----------------------------------------------------------------------------"+"\n";
+	for(let i = 0; i < shopCount.length; i++){
+		for(let j = 0; j < itemList.length; j++){
+			if(shopCount[i].key === itemList[j].id){
+				sum += itemList[j].price  * shopCount[i].count;
+				//message += itemList[j].name +"\t" +"\t" +"\t" + "\t" + itemList[j].price + "\t" + shopCount[i].count + "\n";
+				message += `${itemList[j].name}\t\t\t\t${itemList[j].price}\t${shopCount[i].count}\n`;
+			}
+		}
+
+	}
+	message += "----------------------------------------------------------------------------"+"\n";
+	message += "Price: "+ sum;
+	//console.log(message);
+	return message;
 }
 
-function  printReceipt(shopList,itemList){
+/*function  printReceipt(shopList,itemList){
 	shopList.sort();
 	console.log(shopList);
 	let shopCount = [];
@@ -65,6 +99,58 @@ function  printReceipt(shopList,itemList){
 	console.log(shopCount);
 	
 	var itemIdList = [];
+	for(let i = 0; i < itemList.length; i++){
+		itemIdList.push(itemList[i].id);
+	}
+	
+	
+	
+	let output = "";
+	if(!ifItemExist(shopCount,itemIdList))
+		output +="[ERROR]:item not exist";
+	else{
+		output += getReceipt(shopCount,itemList);
+	}
+	
+	return output;
+	//console.log(output);
+}*/
+
+const printReceipt = (shopList,itemList) => {
+	shopList.sort();
+	//console.log(shopList);
+	let shopCount = [];
+	let temp = {};
+	for(let i = 0; i < shopList.length - 1; i++){
+		if(i == 0){
+			temp.key = shopList[0];
+			temp.count = 1;
+			if(shopList[0] == shopList[1])
+				temp.count ++;
+			else{
+				shopCount.push(temp);
+			temp = {};
+			temp.key = shopList[i+1];
+			temp.count = 1;
+			}
+			continue;
+		}
+		if(shopList[i] == shopList[i+1]){
+			temp.count ++;
+		}else{
+			shopCount.push(temp);
+			temp = {};
+			temp.key = shopList[i+1];
+			temp.count = 1;
+		}
+	}
+
+	if(temp.length!=0)
+		shopCount.push(temp);
+	
+	//console.log(shopCount);
+	
+	let itemIdList = [];
 	for(let i = 0; i < itemList.length; i++){
 		itemIdList.push(itemList[i].id);
 	}
